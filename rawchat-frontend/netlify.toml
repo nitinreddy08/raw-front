@@ -1,12 +1,42 @@
 [build]
   command = "npm run build"
   publish = ".next"
+  functions = ".netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
   NPM_VERSION = "9"
+  NEXT_TELEMETRY_DISABLED = "1"
 
+# Redirect all requests to the Next.js app
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
+
+# Handle Next.js static files
+[[headers]]
+  for = "_next/static/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000, immutable"
+
+# Handle static files
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000, immutable"
+
+# Handle other static assets
+[[headers]]
+  for = "/_next/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000, immutable"
+
+# Enable CORS for WebSocket
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "X-Requested-With, Content-Type"
