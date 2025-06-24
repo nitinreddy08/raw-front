@@ -1,7 +1,8 @@
 import { io } from "socket.io-client";
 
 // Get WebSocket URL from environment variables
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://raw-backend-gyii.onrender.com"; // Updated to use WebSocket Secure (wss://) for production
+const WS_URL =
+  process.env.NEXT_PUBLIC_WS_URL || "wss://raw-backend-gyii.onrender.com"; // Updated to use WebSocket Secure (wss://) for production
 const isDev = process.env.NEXT_PUBLIC_APP_ENV !== "production";
 
 let socket;
@@ -12,6 +13,7 @@ const PING_TIMEOUT = 10000; // 10 seconds
 
 export const getSocket = (deviceId) => {
   if (!socket) {
+    const isSecure = WS_URL.startsWith("wss://");
     const options = {
       auth: { deviceId },
       autoConnect: false,
@@ -23,8 +25,8 @@ export const getSocket = (deviceId) => {
       timeout: PING_TIMEOUT * 2, // Double the ping timeout
       forceNew: true,
       withCredentials: false, // Disable credentials
-      secure: false, // Not using HTTPS in development
-      rejectUnauthorized: false, // For development only
+      secure: isSecure, // Use secure connection for wss://
+      rejectUnauthorized: isSecure, // For production, this should be true
       path: "/socket.io/", // Make sure path matches backend
       transports: ["websocket", "polling"], // Try both transports
       upgrade: true, // Allow upgrades
