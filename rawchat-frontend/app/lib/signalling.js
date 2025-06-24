@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Get WebSocket URL from environment variables
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "http://localhost:5001"; // Use http:// instead of ws://
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://raw-backend-gyii.onrender.com"; // Updated to use WebSocket Secure (wss://) for production
 const isDev = process.env.NEXT_PUBLIC_APP_ENV !== "production";
 
 let socket;
